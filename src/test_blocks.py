@@ -1,4 +1,4 @@
-from blocks import markdown_to_blocks
+from blocks import markdown_to_blocks, block_to_block_type, BlockType
 import unittest
 class TestBlocks(unittest.TestCase):
     def test_to_blocks(self):
@@ -49,3 +49,24 @@ This is a paragraph of text. It has some **bold** and *italic* words inside of i
         self.assertEqual(blocks[0], heading)
         self.assertEqual(blocks[1], paragraph)
         self.assertEqual(blocks[2], markdown_list)
+
+    def test_block_to_block_type(self):
+        unordered_list = block_to_block_type(
+"""* a
+* b""")
+
+        ordered_list = block_to_block_type("""1. a
+2. b""")
+        quote = block_to_block_type("""> a
+> v""")
+        code = block_to_block_type("""```
+<html></html>```""")
+        
+        paragraph = block_to_block_type("""* a
+1. b""")
+
+        self.assertEqual(unordered_list, BlockType.UNORDERED_LIST)
+        self.assertEqual(ordered_list,BlockType.ORDERED_LIST)
+        self.assertEqual(quote, BlockType.QUOTE)
+        self.assertEqual(code, BlockType.CODE)
+        self.assertEqual(paragraph, BlockType.PARAGRAPH)
