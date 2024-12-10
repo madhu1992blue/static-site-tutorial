@@ -21,8 +21,9 @@ class BlockType(Enum):
     ORDERED_LIST = "ordered_list"
 
 def block_to_block_type(block):
-    if block.startswith("# "):
-        return BlockType.HEADING
+    for i in range(1, 7):
+        if block.startswith("#"*i +" "):
+            return BlockType.HEADING
     if block.startswith("```") and block.endswith("```"):
         return BlockType.CODE
     

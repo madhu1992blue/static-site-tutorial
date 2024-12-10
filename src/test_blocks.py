@@ -64,7 +64,10 @@ This is a paragraph of text. It has some **bold** and *italic* words inside of i
         
         paragraph = block_to_block_type("""* a
 1. b""")
-
+        heading = block_to_block_type("""# This is a heading""")
+        heading3 = block_to_block_type("""## This is a l3 heading""")
+        self.assertEqual(heading3, BlockType.HEADING)
+        self.assertEqual(heading, BlockType.HEADING)
         self.assertEqual(unordered_list, BlockType.UNORDERED_LIST)
         self.assertEqual(ordered_list,BlockType.ORDERED_LIST)
         self.assertEqual(quote, BlockType.QUOTE)
