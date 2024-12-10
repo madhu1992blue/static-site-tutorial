@@ -1,6 +1,58 @@
-from split_nodes import split_nodes_delimiter
+from split_nodes import split_nodes_delimiter, split_nodes_link, split_nodes_image
 import unittest
 from textnode import TextNode, TextType
+
+
+class TestSplitNodesLinks(unittest.TestCase):
+    def test_split_link(self):
+        nodes = [TextNode("This is a [link to google](https://google.com)", TextType.TEXT)]
+        expected_nodes = [
+                TextNode("This is a ", TextType.TEXT),
+                TextNode("link to google", TextType.LINK, "https://google.com"),
+        ]
+        
+        new_nodes = split_nodes_link(nodes)
+        self.assertEqual(len(new_nodes), len(expected_nodes))
+        for i in range(len(expected_nodes)):
+            self.assertEqual(new_nodes[i].text, expected_nodes[i].text)
+            self.assertEqual(new_nodes[i].text_type, expected_nodes[i].text_type)
+
+    def test_split_image(self):
+        nodes = [TextNode("This is a ![link to google](https://google.com)", TextType.TEXT)]
+        expected_nodes = [
+                TextNode("This is a ", TextType.TEXT),
+                TextNode("link to google", TextType.IMAGE, "https://google.com"),
+        ]
+
+        new_nodes = split_nodes_image(nodes)
+        print(new_nodes)
+        self.assertEqual(len(new_nodes), len(expected_nodes))
+        for i in range(len(expected_nodes)):
+            self.assertEqual(new_nodes[i].text, expected_nodes[i].text)
+            self.assertEqual(new_nodes[i].text_type, expected_nodes[i].text_type)
+
+    def test_split_no_link(self):
+        nodes = [TextNode("This is a ![link to google](https://google.com)", TextType.TEXT)]
+        expected_nodes = [
+                TextNode("This is a ![link to google](https://google.com)", TextType.TEXT),
+        ]
+
+        new_nodes = split_nodes_link(nodes)
+        self.assertEqual(len(new_nodes), len(expected_nodes))
+        for i in range(len(expected_nodes)):
+            self.assertEqual(new_nodes[i].text, expected_nodes[i].text)
+            self.assertEqual(new_nodes[i].text_type, expected_nodes[i].text_type)
+
+    def test_split_no_image(self):
+        nodes = [TextNode("This is a [link to google](https://google.com)", TextType.TEXT)]
+        expected_nodes = [
+                TextNode("This is a [link to google](https://google.com)", TextType.TEXT),
+        ]
+        new_nodes = split_nodes_image(nodes)
+        self.assertEqual(len(new_nodes), len(expected_nodes))
+        for i in range(len(expected_nodes)):
+            self.assertEqual(new_nodes[i].text, expected_nodes[i].text)
+            self.assertEqual(new_nodes[i].text_type, expected_nodes[i].text_type)
 class TestSplitNodesDelimiter(unittest.TestCase):
     def test_split_code(self):
         node = TextNode("This is text with a `code block` word", TextType.TEXT)
